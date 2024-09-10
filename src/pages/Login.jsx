@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import mark from '../assets/Login3.svg'
 
 
 <style>
@@ -11,13 +12,10 @@ import { Link } from 'react-router-dom'
 function Login() {
   return (
     <>
-      <div className="">
-        <div className="">
-          
-           <img src="../assets/imageLogin.jpg" alt="" />
-          
-        </div>
-      </div>
+      <div className="ml-12">
+        <h1 className='text-center  text-5xl font-extrabold '  > Application For  <span className='text-gray-700 '  > Cell Phone Sales</span> </h1> 
+        <img className='transition duration-300 ease-in-out' src={mark} alt="" />
+      </div>   
 
       <div className="mt-10 md:mt-5 shadow-xl px-5 py-2 rounded-xl bg-white">
       

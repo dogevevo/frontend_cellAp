@@ -1,11 +1,43 @@
 import React from 'react'
 import mark from '../assets/Login2.svg'
+import Alerta from '../components/Alerta'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import clienteAxios from '../config/axios'
 
 function OlvidePassword() {
 
-  
+  const [email, setEmail] = useState(''); 
+  const [alerta, setAlerta] = useState(''); 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (email === '' && email.length < 6) {
+        setAlerta({
+          msg : 'Todos los campos son obligatorios', 
+          error : true 
+        })
+      return
+    }
+
+    try {
+
+      const {data} = await clienteAxios.post(`/usuarios/olvide-password`, {email})
+      setAlerta({msg : data.msg});
+      
+      
+
+    } catch (error) {
+      setAlerta({
+        msg : error.response.data.msg,
+        error : true,
+      })
+    }
+    
+  }
+
+  const {msg} = alerta
 
   return (
     <>
@@ -21,14 +53,18 @@ function OlvidePassword() {
           <p className=' roger text-gray-600 mx-4 mb-14 '> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate asperiores repellendus, blanditiis laudantium adipisci </p>
         </div>
 
-        <form action="">
+        {msg && <Alerta
+          alerta = {alerta}
+        />}
+
+        <form action="" onSubmit={handleSubmit}>
 
           <div className="mt-5">
             <label className='uppercase text-gray-600 black text-sm font-bold ' > Email </label>
-            <input className='border-solid border-2 border-gray-500 w-full p-3 mt-1 bg-gray-50 rounded-3xl text-gray-700' type="password" placeholder='Password' />
+            <input className='border-solid border-2 border-gray-500 w-full p-3 mt-1 bg-gray-50 rounded-3xl text-gray-700' type="email" placeholder='Email' value={email} onChange={e => setEmail(e.target.value)}/>
           </div>
 
-          <input type="submit" value="Crear Cuenta" className="bg-black w-full py-3 rounded-xl text-white uppercase font-bold mt-5 mb-10 hover:cursor-pointer hover:bg-gray-800"/>
+          <input type="submit" value="Recuperar Password" className="bg-black w-full py-3 rounded-xl text-white uppercase font-bold mt-5 mb-10 hover:cursor-pointer hover:bg-gray-800"/>
 
           <nav className="mt-7 lg:flex lg:justify-between">
             <Link to="/" className="block text-center text-gray-500 text-lg my-3">¿Ya tienes una cuenta? inicia seccion</Link>

@@ -99,7 +99,7 @@ function Registrar() {
 
           <nav className="mt-7 lg:flex lg:justify-between">
               <Link to="/" className="block text-center text-gray-800 text-lg font-semibold my-3">Iniciar Sesion  </Link>
-              <Link to="/OlvidePassword" className="block text-center text-gray-800 font-semibold text-lg my-3">Olvide mi Password</Link>
+              <Link to="/olvide-password" className="block text-center text-gray-800 font-semibold text-lg my-3">Olvide mi Password</Link>
           </nav>
 
         </form>
