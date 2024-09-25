@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Alerta from '../components/Alerta'
 import mark from '../assets/Login2.svg'
@@ -6,51 +6,72 @@ import clienteAxios from '../config/axios';
 
 function NuevoPassword() {
 
-  const [newPassword, setNewPassword  ] = useState('');
+  const [password, setpassword  ] = useState('');
   const [alerta, setAlerta] = useState({})
   const [tokenValido, setTokenValido ] = useState(false); 
   const [passwordModificado, setPasswordModificado] = useState(false)
 
-  const params = useParams();
-  const {token} = params;
-  
-  useEffect(()  => {
-      const ValidarToken = async () => {
-        try {
-          await clienteAxios(`usuarios/olvide-password/${token}`); 
-          setAlerta({msg : 'coloca una nueva contraseña'})
-          setTokenValido(true)
-        } catch (error) {
-          setAlerta({ msg : 'Hubo un error en el enlace', error : true })
-        }   
-      }
+  const params = useParams()
+  const {token } = params 
 
-      ValidarToken(); 
-  }, [])
-
-    
-
-
-  const handleSubmit = async (e) => {
-      e.preventDefault(); 
-
-      if (newPassword.length < 6 ) {
-          setAlerta({ msg : 'El password debe de tener minimo 6 caracteres', error : true }); 
-          setPasswordModificado(true)
-          return; 
-      }
+  useEffect(() => {
+    const validarToken = async () => {
 
       try {
-          const url = `usuarios/olvide-password/${token}`; 
-          const {data} = await clienteAxios.post(url, {password})
-          
-          setAlerta({ msg : data.msg  })
-          setPasswordModificado(true)
-                      
+
+        await clienteAxios(`/usuarios/olvide-password/${token}`)
+        setAlerta({
+          msg : 'Coloca tu password'
+        })
+        setTokenValido(true); 
+        
       } catch (error) {
-          setAlerta({ msg : error.response.data.msg, error : true })
+        setAlerta({ 
+          msg : 'Hubo un error de enlace',
+          error: true, 
+        })
       }
+
+    }
+
+    validarToken()
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+
+    if (password.length < 6) {
+      setAlerta({
+        msg : 'El password debe de tener minimo 6 digitos',
+        error : true,
+      })
+      return
+    }
+
+    console.log(token);
+    console.log(password);
+    
+    
+
+    try {
+      const url = `/usuarios/olvide-password/${token}`
+      const { data } = await clienteAxios.post(url, { password } )
+      console.log(data);
+      
+
+      setAlerta({
+        msg: data.msg
+      })
+      setPasswordModificado(true)
+    } catch (error) {
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true
+      })
+    }
+
   }
+  
 
   const { msg } = alerta; 
 
@@ -73,22 +94,21 @@ function NuevoPassword() {
         />}
 
         { tokenValido && (
-          <>
-            <form onSubmit={handleSubmit}>
 
-                <div className="mt-5">
-                    <label className='uppercase text-gray-600 black text-sm font-bold ' > Nuevo Password </label>
-                    <input className='border-solid border-2 border-gray-500 w-full p-3 mt-1 bg-gray-50 rounded-3xl text-gray-700' type="password" placeholder='Nuevo password' value={newPassword} onChange={e => setNewPassword(e.target.value)}/>
-                </div>
+          <form onSubmit={handleSubmit}>
 
-                <input type="submit" value="Recuperar Password" className="bg-black w-full py-3 rounded-xl text-white uppercase font-bold mt-5 mb-10 hover:cursor-pointer hover:bg-gray-800"/>
+              <div className="mt-5">
+                  <label className='uppercase text-gray-600 black text-sm font-bold ' > Nuevo Password </label>
+                  <input className='border-solid border-2 border-gray-500 w-full p-3 mt-1 bg-gray-50 rounded-3xl text-gray-700' type="password" placeholder='Nuevo password' value={password} onChange={e => setpassword(e.target.value)}/>
+              </div>
 
-            </form>
-          </>
+              <input type="submit" value="Recuperar Password" className="bg-black w-full py-3 rounded-xl text-white uppercase font-bold mt-5 mb-10 hover:cursor-pointer hover:bg-gray-800"/>
+
+          </form>
+
         )}
 
-        { passwordModificado && <Link to="/" className="block text-center text-gray-500 text-lg my-3">¿Ya tienes una cuenta? inicia seccion</Link>}
-
+        { passwordModificado && <Link to="/" className="block text-center text-gray-500 text-lg my-3">¿Ya tienes una cuenta? inicia seccion</Link>  }
 
       </div>
     </>
