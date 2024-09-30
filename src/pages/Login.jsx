@@ -8,8 +8,8 @@ import clienteAxios from '../config/axios'
 
 function Login() {
 
-  const {auth} =  useAuth(); 
-  console.log(auth);
+  // const {auth} =  useAuth(); 
+  // console.log(auth);
 
 
   const [ email, setEmail] = useState('');
@@ -27,7 +27,7 @@ function Login() {
 
     try {
       
-      const {data} = clienteAxios.post('usuario/login', {email, password})
+      const {data} = await clienteAxios.post('/usuarios/login', {email, password})
       console.log(data);
       
 
